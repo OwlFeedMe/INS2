@@ -4,7 +4,7 @@
  * Ing. Sistemas y telecomunicaciones 
  *   * 
  */
-package com.mycompany.proyectoins2;
+package Raiz.com.mycompany.proyectoins2;
 
 /**
  *
