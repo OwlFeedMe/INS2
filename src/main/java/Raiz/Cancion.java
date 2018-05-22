@@ -16,20 +16,36 @@ import java.util.ArrayList;
 public class Cancion {
 
     private String Nombre;
-    private ArrayList<Interprete> Interprete;
+    private ArrayList<Artista> Artista ;
     private ArrayList<Album> Album;
     private String disquera;
     private String FechaDeSalida;
 
     public Cancion(String Nombre, String disquera, String FechaDeSalida) {
         this.Nombre = Nombre;
-        this.Interprete = new ArrayList<Interprete>();
+        this.Artista = new ArrayList<Artista>();
         this.Album = new ArrayList<Album>();
         this.disquera = disquera;
         this.FechaDeSalida = FechaDeSalida;
     }
 
-    public boolean Asignar_Interprete_Cancion() {
+    public ArrayList<Artista> getArtista() {
+        return Artista;
+    }
+
+    public void setArtista(ArrayList<Artista> Artista) {
+        this.Artista = Artista;
+    }
+
+    public ArrayList<Album> getAlbum() {
+        return Album;
+    }
+
+    public void setAlbum(ArrayList<Album> Album) {
+        this.Album = Album;
+    }
+
+    public boolean Asignar_Artista_Cancion() {
 
         return true;
     }

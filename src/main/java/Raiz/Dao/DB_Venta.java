@@ -7,7 +7,7 @@
 package Raiz.Dao;
 
 import Raiz.Artista;
-import Raiz.Cancion;
+import Raiz.Ventas;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,10 +17,11 @@ import java.sql.SQLException;
  *
  * @author user
  */
-public class DB_Cancion {
+public class DB_Venta {
+
     public Connection connection;
 
-    public DB_Cancion() {
+    public DB_Venta() {
         conectar();
     }
 
@@ -62,13 +63,13 @@ public class DB_Cancion {
 
     }
 
-    public boolean Insertar(Cancion a) {
+    public boolean Insertar(Ventas a, int id) {
 //        Insertion 
 //	 create a sql date object so we can use it in our INSERT statement
 
         // the mysql insert statement
-        String query = " insert into Cancione "
-                + " values( null , ? , ? , ? , null , null)";
+        String query = " insert into Ventas "
+                + " values( null , ? , ? , ? , ? )";
 
         // create the mysql insert preparedstatement
         PreparedStatement preparedStmt = null;
@@ -76,31 +77,10 @@ public class DB_Cancion {
         try {
 
             preparedStmt = connection.prepareStatement(query);
-            preparedStmt.setString(1, a.getNombre());
-            String ar="";
-            for (int i = 0; i < a.getArtista().size(); i++) {
-                if (i < a.getArtista().size() - 1) {
-                    ar += a.getArtista().get(i).getId() + ",";
-                   
-                } else {
-                     ar += a.getArtista().get(i).getId();
-                }
-
-            }
-            preparedStmt.setString(2, ar);
-            
-            String arc="";
-            for (int i = 0; i < a.getAlbum().size(); i++) {
-                if (i < a.getAlbum().size() - 1) {
-                    arc += a.getAlbum().get(i).getNombre() + ",";
-                   
-                } else {
-                     arc += a.getAlbum().get(i).getNombre();
-                }
-
-            }
-            preparedStmt.setString(3, arc);
-            
+            preparedStmt.setLong(1, a.getFecha());
+            preparedStmt.setInt(2, id);
+            preparedStmt.setString(3, a.getAlbum().getNombre());
+            preparedStmt.setInt(4, a.getCantidas());
 
             // execute the preparedstatement
             preparedStmt.execute();

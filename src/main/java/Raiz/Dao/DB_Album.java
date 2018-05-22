@@ -6,17 +6,25 @@
  */
 package Raiz.Dao;
 
+import Raiz.Album;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Calendar;
 
 /**
  *
  * @author user
  */
 public class DB_Album {
-     public DAO_Album obj;
+
+    
     public Connection connection;
+
+    public DB_Album() {
+        conectar();
+    }
 
     public void conectar() {
 
@@ -40,7 +48,7 @@ public class DB_Album {
         System.out.println("MySQL JDBC Driver Registered!");
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/public", "root", "root");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/musica", "root", "");
 
         } catch (SQLException e) {
             System.out.println("Connection Failed! Check output console");
@@ -54,6 +62,48 @@ public class DB_Album {
             System.out.println("Failed to make connection!");
         }
 
+    }
+
+    public boolean Insertar(Album a) {
+//        Insertion 
+//	 create a sql date object so we can use it in our INSERT statement
+
+        // the mysql insert statement
+        String query = " insert into Album "
+                + " values( ? , ? , null , null )";
+
+        // create the mysql insert preparedstatement
+        PreparedStatement preparedStmt = null;
+
+        try {
+
+            preparedStmt = connection.prepareStatement(query);
+            preparedStmt.setString(1, a.getNombre());
+            String ar = "";
+            for (int i = 0; i < a.getInterprete().size(); i++) {
+                if (i < a.getInterprete().size() - 1) {
+                    ar += a.getInterprete().get(i).getId() + ",";
+                   
+                } else {
+                     ar += a.getInterprete().get(i).getId();
+                }
+
+            }
+            preparedStmt.setString(2, ar);
+
+            // execute the preparedstatement
+            preparedStmt.execute();
+
+            System.out.println("You made it, the insertion is ok!");
+
+        } catch (SQLException ee) {
+            // TODO Auto-generated catch block
+            System.out.println("Failed to make insertion!");
+
+            ee.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public void desconectar() {

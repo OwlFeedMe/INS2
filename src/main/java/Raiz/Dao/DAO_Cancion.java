@@ -8,7 +8,7 @@ package Raiz.Dao;
 
 import Raiz.Album;
 import Raiz.Cancion;
-import Raiz.Interprete;
+import Raiz.Artista;
 import java.util.ArrayList;
 
 /**
@@ -25,7 +25,7 @@ public class DAO_Cancion {
         return null;
     }
 
-    public ArrayList<Interprete> ListarPorInterprete() {
+    public ArrayList<Artista> ListarPorInterprete() {
         return null;
     }
 

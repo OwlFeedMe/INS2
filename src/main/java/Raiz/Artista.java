@@ -11,18 +11,27 @@ package Raiz;
  *
  * @author user
  */
-public class Interprete {
-
+public class Artista {
+    private int id;
     private String Nombre_Apellido;
     private String NombreArtistico;
-    private String Disquera;
-    private int Edad;
+ 
 
-    public Interprete(String Nombre_Apellido, String NombreArtistico, String Disquera, int Edad) {
+    public Artista(int id,String Nombre_Apellido, String NombreArtistico) {
+        this.id=id;
         this.Nombre_Apellido = Nombre_Apellido;
         this.NombreArtistico = NombreArtistico;
-        this.Disquera = Disquera;
-        this.Edad = Edad;
+        
+       
+        
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNombre_Apellido() {
@@ -41,20 +50,5 @@ public class Interprete {
         this.NombreArtistico = NombreArtistico;
     }
 
-    public String getDisquera() {
-        return Disquera;
-    }
-
-    public void setDisquera(String Disquera) {
-        this.Disquera = Disquera;
-    }
-
-    public int getEdad() {
-        return Edad;
-    }
-
-    public void setEdad(int Edad) {
-        this.Edad = Edad;
-    }
-
+   
 }

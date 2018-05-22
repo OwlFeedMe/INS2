@@ -7,18 +7,18 @@
 package Raiz.Dao;
 
 import Raiz.Album;
-import Raiz.Interprete;
+import Raiz.Artista;
 import java.util.ArrayList;
 
 /**
  *
  * @author user
  */
-public class DAO_Interprete {
-    public boolean Insertar(Interprete a){
+public class DAO_Artista {
+    public boolean Insertar(Artista a){
     return true;
     }
-     public ArrayList<Interprete> ListarInterprete() {
+     public ArrayList<Artista> ListarInterprete() {
         return null;
     }
 }
