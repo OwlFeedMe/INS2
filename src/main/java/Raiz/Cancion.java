@@ -18,19 +18,32 @@ public class Cancion {
     private String Nombre;
     private ArrayList<Artista> Artista ;
     private ArrayList<Album> Album;
-    private String disquera;
-    private String FechaDeSalida;
+    private String posicionAnterior;
+    private String Aparicionesenlistas;
+    private int NVentas;
 
-    public Cancion(String Nombre, String disquera, String FechaDeSalida) {
+    public Cancion(String Nombre, String posicionAnterior, String Aparicionesenlistas, int Nventas) {
         this.Nombre = Nombre;
         this.Artista = new ArrayList<Artista>();
         this.Album = new ArrayList<Album>();
-        this.disquera = disquera;
-        this.FechaDeSalida = FechaDeSalida;
+        this.posicionAnterior = posicionAnterior;
+        this.Aparicionesenlistas = Aparicionesenlistas;
+        this.NVentas=Nventas;
+    }
+
+    public Cancion() {
     }
 
     public ArrayList<Artista> getArtista() {
         return Artista;
+    }
+
+    public int getNVentas() {
+        return NVentas;
+    }
+
+    public void setNVentas(int NVentas) {
+        this.NVentas = NVentas;
     }
 
     public void setArtista(ArrayList<Artista> Artista) {
@@ -63,20 +76,22 @@ public class Cancion {
         this.Nombre = Nombre;
     }
 
-    public String getDisquera() {
-        return disquera;
+    public String getPosicionAnterior() {
+        return posicionAnterior;
     }
 
-    public void setDisquera(String disquera) {
-        this.disquera = disquera;
+    public void setPosicionAnterior(String posicionAnterior) {
+        this.posicionAnterior = posicionAnterior;
     }
 
-    public String getFechaDeSalida() {
-        return FechaDeSalida;
+    public String getAparicionesenlistas() {
+        return Aparicionesenlistas;
     }
 
-    public void setFechaDeSalida(String FechaDeSalida) {
-        this.FechaDeSalida = FechaDeSalida;
+    public void setAparicionesenlistas(String Aparicionesenlistas) {
+        this.Aparicionesenlistas = Aparicionesenlistas;
     }
+
+
 
 }

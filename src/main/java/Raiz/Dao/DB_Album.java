@@ -7,10 +7,15 @@
 package Raiz.Dao;
 
 import Raiz.Album;
+import Raiz.Artista;
+import Raiz.ListaCancion;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -19,7 +24,6 @@ import java.util.Calendar;
  */
 public class DB_Album {
 
-    
     public Connection connection;
 
     public DB_Album() {
@@ -83,9 +87,9 @@ public class DB_Album {
             for (int i = 0; i < a.getInterprete().size(); i++) {
                 if (i < a.getInterprete().size() - 1) {
                     ar += a.getInterprete().get(i).getId() + ",";
-                   
+
                 } else {
-                     ar += a.getInterprete().get(i).getId();
+                    ar += a.getInterprete().get(i).getId();
                 }
 
             }
@@ -104,6 +108,96 @@ public class DB_Album {
             return false;
         }
         return true;
+    }
+
+    public Album buscarCanciones(String a) throws SQLException {
+
+        Album album = new Album();
+        try {
+            // create the java statement
+
+            Statement st = connection.createStatement();
+
+            // execute the query, and get a java resultset
+            String query = "SELECT  * FROM Album  where nombre = " + a;
+            ResultSet rs = st.executeQuery(query);
+
+            while (rs.next()) {
+                // iterate through the java resultset
+                album.setNombre(a);
+
+                String Art = rs.getString("idArtista");
+                String[] ArtA = Art.split(",");
+                ArrayList<Artista> arrayList = new ArrayList<Artista>();
+                DB_Interprete db_Interprete = new DB_Interprete();
+                for (int i = 0; i < ArtA.length; i++) {
+                    arrayList.add(db_Interprete.buscarArtista(Integer.valueOf(ArtA[i])));
+                }
+
+                album.setInterpreteS(arrayList);
+
+                album.setNV(rs.getInt("Aparicionesenlista"));
+                album.setPosAn(rs.getInt("posicionAnterior"));
+                DB_Venta db_Venta = new DB_Venta();
+                album.setNVentas(0);
+
+            }
+            // print the results
+            st.close();
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            System.out.println("Failed to make update!");
+            e.printStackTrace();
+            return null;
+        }
+
+        return album;
+    }
+
+    public Album buscarCancionesConventas(String a, long b) throws SQLException {
+
+        Album album = new Album();
+        try {
+            // create the java statement
+
+            Statement st = connection.createStatement();
+
+            // execute the query, and get a java resultset
+            String query = "SELECT  * FROM Album  where nombre = " + a;
+            ResultSet rs = st.executeQuery(query);
+
+            while (rs.next()) {
+                // iterate through the java resultset
+                album.setNombre(a);
+
+                String Art = rs.getString("idArtista");
+                String[] ArtA = Art.split(",");
+                ArrayList<Artista> arrayList = new ArrayList<Artista>();
+                DB_Interprete db_Interprete = new DB_Interprete();
+                for (int i = 0; i < ArtA.length; i++) {
+                    arrayList.add(db_Interprete.buscarArtista(Integer.valueOf(ArtA[i])));
+                }
+
+                album.setInterpreteS(arrayList);
+
+                album.setNV(rs.getInt("Aparicionesenlista"));
+                album.setPosAn(rs.getInt("posicionAnterior"));
+                DB_Venta db_Venta = new DB_Venta();
+                album.setNVentas(db_Venta.buscarVentasAlbAntesDe(a, b));
+
+            }
+            // print the results
+            st.close();
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            System.out.println("Failed to make update!");
+            e.printStackTrace();
+            return null;
+        }
+
+        return album;
     }
 
     public void desconectar() {

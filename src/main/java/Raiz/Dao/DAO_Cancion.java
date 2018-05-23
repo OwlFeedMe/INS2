@@ -9,6 +9,7 @@ package Raiz.Dao;
 import Raiz.Album;
 import Raiz.Cancion;
 import Raiz.Artista;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -17,19 +18,23 @@ import java.util.ArrayList;
  */
 public class DAO_Cancion {
 
+    private DB_Cancion DB;
+
+    public DAO_Cancion() {
+        this.DB = new DB_Cancion();
+
+    }
+
     public boolean Insertar(Cancion a) {
-        return true;
+
+        return DB.Insertar(a);
     }
 
-    public ArrayList<Cancion> ListarCanciones() {
-        return null;
+    public ArrayList<Cancion> ListarPorInterprete(int a) throws SQLException {
+        return DB.buscarCancionesPorAutor(a);
     }
 
-    public ArrayList<Artista> ListarPorInterprete() {
-        return null;
-    }
-
-    public ArrayList<Album> ListarPorAlbum() {
-        return null;
+    public ArrayList<Cancion> ListarPorAlbum(String a) throws SQLException {
+        return DB.buscarCancionesPorAlbum(a);
     }
 }

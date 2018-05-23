@@ -19,13 +19,26 @@ public class Album {
     private int PosAn;
     private int PosAc;
     private int NV;
+    private int NVentas;
 
-    public Album(String Nombre, int PosAn, int PosAc, int NV) {
+    public Album(String Nombre, int PosAn, int PosAc, int NVentas) {
         this.Nombre = Nombre;
         this.PosAn = PosAn;
         this.PosAc = PosAc;
-        this.NV = NV;
+        this.NVentas=0;
+      
         this.Interprete= new ArrayList();
+    }
+
+    public Album() {
+    }
+
+    public int getNVentas() {
+        return NVentas;
+    }
+
+    public void setNVentas(int NVentas) {
+        this.NVentas = NVentas;
     }
 
     public ArrayList<Artista> getInterprete() {
@@ -36,7 +49,9 @@ public class Album {
         this.Interprete.add(e);
     }
 
-    
+    public void setInterpreteS(ArrayList<Artista> e) {
+        this.Interprete = e;
+    }
 
     public int getPosAn() {
         return PosAn;

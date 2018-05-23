@@ -15,10 +15,19 @@ import java.util.ArrayList;
  * @author user
  */
 public class DAO_Artista {
-    public boolean Insertar(Artista a){
-    return true;
+
+    private DB_Interprete DB;
+
+    public DAO_Artista() {
+        this.DB = new DB_Interprete();
     }
-     public ArrayList<Artista> ListarInterprete() {
+
+    public boolean Insertar(Artista a) {
+        return DB.Insertar(a);
+    }
+
+    public ArrayList<Artista> ListarInterprete() {
+        
         return null;
     }
 }

@@ -6,18 +6,24 @@
  */
 package Raiz.Dao;
 
+import Raiz.Album;
 import Raiz.Artista;
 import Raiz.Cancion;
+import Raiz.ListaCancion;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  *
  * @author user
  */
 public class DB_Cancion {
+
     public Connection connection;
 
     public DB_Cancion() {
@@ -77,30 +83,29 @@ public class DB_Cancion {
 
             preparedStmt = connection.prepareStatement(query);
             preparedStmt.setString(1, a.getNombre());
-            String ar="";
+            String ar = "";
             for (int i = 0; i < a.getArtista().size(); i++) {
                 if (i < a.getArtista().size() - 1) {
                     ar += a.getArtista().get(i).getId() + ",";
-                   
+
                 } else {
-                     ar += a.getArtista().get(i).getId();
+                    ar += a.getArtista().get(i).getId();
                 }
 
             }
             preparedStmt.setString(2, ar);
-            
-            String arc="";
+
+            String arc = "";
             for (int i = 0; i < a.getAlbum().size(); i++) {
                 if (i < a.getAlbum().size() - 1) {
                     arc += a.getAlbum().get(i).getNombre() + ",";
-                   
+
                 } else {
-                     arc += a.getAlbum().get(i).getNombre();
+                    arc += a.getAlbum().get(i).getNombre();
                 }
 
             }
             preparedStmt.setString(3, arc);
-            
 
             // execute the preparedstatement
             preparedStmt.execute();
@@ -115,6 +120,186 @@ public class DB_Cancion {
             return false;
         }
         return true;
+    }
+
+    public ArrayList<Cancion> buscarCancionesPorAutor(int a) throws SQLException {
+        ArrayList<Cancion> arrayList = new ArrayList<Cancion>();
+        Cancion Cancion = new Cancion();
+        try {
+            // create the java statement
+
+            Statement st = connection.createStatement();
+
+            // execute the query, and get a java resultset
+            String query = "SELECT  * FROM  Cancion";
+            ResultSet rs = st.executeQuery(query);
+
+            while (rs.next()) {
+                boolean apa = false;
+                // iterate through the java resultset
+                Cancion.setNombre(rs.getString("nombre"));
+                String Art = rs.getString("idArtista");
+                String[] ArtA = Art.split(",");
+
+                ArrayList<Artista> aL = new ArrayList<Artista>();
+
+                DB_Interprete db_Interprete = new DB_Interprete();
+                for (int i = 0; i < ArtA.length; i++) {
+                    if (db_Interprete.buscarArtista(Integer.valueOf(ArtA[i])).getId() == a) {
+                        apa = true;
+                    }
+                    aL.add(db_Interprete.buscarArtista(Integer.valueOf(ArtA[i])));
+                }
+                Cancion.setArtista(aL);
+
+                String Almb = rs.getString("NombreAlbum");
+                String[] AlmbA = Almb.split(",");
+                ArrayList<Album> aLA = new ArrayList<Album>();
+
+                DB_Album db_Albm = new DB_Album();
+                for (int i = 0; i < ArtA.length; i++) {
+                    aLA.add(db_Albm.buscarCanciones(ArtA[i]));
+                }
+                Cancion.setAlbum(aLA);
+                Cancion.setPosicionAnterior(rs.getString("posicionAnterior"));
+                Cancion.setAparicionesenlistas(rs.getString("Aparicionesenlistas"));
+                DB_Venta db_Venta = new DB_Venta();
+                Cancion.setNVentas(db_Venta.buscarVentasCan(rs.getInt("id")));
+
+                if (apa == true) {
+                    arrayList.add(Cancion);
+                }
+            }
+            // print the results
+            st.close();
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            System.out.println("Failed to make update!");
+            e.printStackTrace();
+            return null;
+        }
+
+        return arrayList;
+    }
+
+    public ArrayList<Cancion> buscarCancionesPorAlbum(String a) throws SQLException {
+        ArrayList<Cancion> arrayList = new ArrayList<Cancion>();
+        Cancion Cancion = new Cancion();
+        try {
+            // create the java statement
+
+            Statement st = connection.createStatement();
+
+            // execute the query, and get a java resultset
+            String query = "SELECT  * FROM  Cancion";
+            ResultSet rs = st.executeQuery(query);
+
+            while (rs.next()) {
+                boolean apa = false;
+                // iterate through the java resultset
+                Cancion.setNombre(rs.getString("nombre"));
+                String Art = rs.getString("idArtista");
+                String[] ArtA = Art.split(",");
+
+                ArrayList<Artista> aL = new ArrayList<Artista>();
+
+                DB_Interprete db_Interprete = new DB_Interprete();
+                for (int i = 0; i < ArtA.length; i++) {
+
+                    aL.add(db_Interprete.buscarArtista(Integer.valueOf(ArtA[i])));
+                }
+                Cancion.setArtista(aL);
+
+                String Almb = rs.getString("NombreAlbum");
+                String[] AlmbA = Almb.split(",");
+                ArrayList<Album> aLA = new ArrayList<Album>();
+
+                DB_Album db_Albm = new DB_Album();
+                for (int i = 0; i < ArtA.length; i++) {
+                    if (db_Albm.buscarCanciones(ArtA[i]).getNombre().equals(a)) {
+                        apa = true;
+                    }
+                    aLA.add(db_Albm.buscarCanciones(ArtA[i]));
+                }
+                Cancion.setAlbum(aLA);
+                Cancion.setPosicionAnterior(rs.getString("posicionAnterior"));
+                Cancion.setAparicionesenlistas(rs.getString("Aparicionesenlistas"));
+                DB_Venta db_Venta = new DB_Venta();
+                Cancion.setNVentas(db_Venta.buscarVentasCan(rs.getInt("id")));
+
+                if (apa == true) {
+                    arrayList.add(Cancion);
+                }
+            }
+            // print the results
+            st.close();
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            System.out.println("Failed to make update!");
+            e.printStackTrace();
+            return null;
+        }
+
+        return arrayList;
+    }
+
+    public Cancion buscarCancionPorId(int a, long b) throws SQLException {
+
+        Cancion Cancion = new Cancion();
+        try {
+            // create the java statement
+
+            Statement st = connection.createStatement();
+
+            // execute the query, and get a java resultset
+            String query = "SELECT  * FROM  Cancion where id = " + a;
+            ResultSet rs = st.executeQuery(query);
+
+            while (rs.next()) {
+
+                // iterate through the java resultset
+                Cancion.setNombre(rs.getString("nombre"));
+                String Art = rs.getString("idArtista");
+                String[] ArtA = Art.split(",");
+
+                ArrayList<Artista> aL = new ArrayList<Artista>();
+
+                DB_Interprete db_Interprete = new DB_Interprete();
+                for (int i = 0; i < ArtA.length; i++) {
+
+                    aL.add(db_Interprete.buscarArtista(Integer.valueOf(ArtA[i])));
+                }
+                Cancion.setArtista(aL);
+
+                String Almb = rs.getString("NombreAlbum");
+                String[] AlmbA = Almb.split(",");
+                ArrayList<Album> aLA = new ArrayList<Album>();
+
+                DB_Album db_Albm = new DB_Album();
+                for (int i = 0; i < ArtA.length; i++) {
+
+                    aLA.add(db_Albm.buscarCanciones(ArtA[i]));
+                }
+                Cancion.setAlbum(aLA);
+                Cancion.setPosicionAnterior(rs.getString("posicionAnterior"));
+                Cancion.setAparicionesenlistas(rs.getString("Aparicionesenlistas"));
+                DB_Venta db_Venta = new DB_Venta();
+                Cancion.setNVentas(db_Venta.buscarVentasCanAntesDe(a, b));
+
+            }
+            // print the results
+            st.close();
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            System.out.println("Failed to make update!");
+            e.printStackTrace();
+            return null;
+        }
+
+        return Cancion;
     }
 
     public void desconectar() {

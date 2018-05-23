@@ -6,24 +6,22 @@
  */
 package Raiz.Dao;
 
-import Raiz.Album;
 import Raiz.Artista;
+import Raiz.ListasExitos;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  *
  * @author user
  */
-public class DB_Interprete {
+public class DB_ListaExitos {
 
     public Connection connection;
 
-    public DB_Interprete() {
+    public DB_ListaExitos() {
         conectar();
     }
 
@@ -65,13 +63,13 @@ public class DB_Interprete {
 
     }
 
-    public boolean Insertar(Artista a) {
+    public boolean Insertar(ListasExitos a) {
 //        Insertion 
 //	 create a sql date object so we can use it in our INSERT statement
 
         // the mysql insert statement
-        String query = " insert into Artista "
-                + " values( null , ? , ?)";
+        String query = " insert into ListasdeExitos "
+                + " values( null , ? )";
 
         // create the mysql insert preparedstatement
         PreparedStatement preparedStmt = null;
@@ -79,8 +77,7 @@ public class DB_Interprete {
         try {
 
             preparedStmt = connection.prepareStatement(query);
-            preparedStmt.setString(1, a.getNombre_Apellido());
-            preparedStmt.setString(2, a.getNombreArtistico());
+            preparedStmt.setLong(1, a.getUltFecha());
 
             // execute the preparedstatement
             preparedStmt.execute();
@@ -95,37 +92,6 @@ public class DB_Interprete {
             return false;
         }
         return true;
-    }
-
-    public Artista buscarArtista(int a) throws SQLException {
-
-        Artista artista = new Artista();
-        try {
-            // create the java statement
-
-            Statement st = connection.createStatement();
-
-            // execute the query, and get a java resultset
-            String query = "SELECT  * FROM Artista  where id = " + a;
-            ResultSet rs = st.executeQuery(query);
-
-            while (rs.next()) {
-                // iterate through the java resultset
-                artista.setId(a);
-                artista.setNombre_Apellido(rs.getString("nombreReal"));
-                artista.setNombreArtistico(rs.getString("nombre"));
-            }
-            // print the results
-            st.close();
-
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            System.out.println("Failed to make update!");
-            e.printStackTrace();
-            return null;
-        }
-
-        return artista;
     }
 
     public void desconectar() {

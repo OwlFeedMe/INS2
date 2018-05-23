@@ -23,6 +23,9 @@ public class Ventas {
         this.Cantidas = Cantidas;
     }
 
+    public Ventas() {
+     }
+
     public Long getFecha() {
         return Fecha;
     }

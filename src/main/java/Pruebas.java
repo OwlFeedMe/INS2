@@ -20,11 +20,6 @@ public class Pruebas {
         
         
         
-        DB_Album db_Album = new DB_Album();
-        Artista artista = new Artista(1, "Rene", "Calle 13");
-        Album album = new Album("Ojos Color Sol", 0, 0, 0);
-        album.setInterprete(artista);
-        
-        db_Album.Insertar(album);
+      
     }
 }

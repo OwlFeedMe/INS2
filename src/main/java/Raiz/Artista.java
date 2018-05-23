@@ -26,6 +26,9 @@ public class Artista {
         
     }
 
+    public Artista() {
+    }
+
     public int getId() {
         return id;
     }
