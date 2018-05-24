@@ -73,7 +73,7 @@ public class DB_Cancion {
 //	 create a sql date object so we can use it in our INSERT statement
 
         // the mysql insert statement
-        String query = " insert into Cancione "
+        String query = " insert into Cancion "
                 + " values( null , ? , ? , ? , null , null)";
 
         // create the mysql insert preparedstatement
@@ -143,7 +143,7 @@ public class DB_Cancion {
 
                 ArrayList<Artista> aL = new ArrayList<Artista>();
 
-                DB_Interprete db_Interprete = new DB_Interprete();
+                DB_Artista db_Interprete = new DB_Artista();
                 for (int i = 0; i < ArtA.length; i++) {
                     if (db_Interprete.buscarArtista(Integer.valueOf(ArtA[i])).getId() == a) {
                         apa = true;
@@ -158,7 +158,7 @@ public class DB_Cancion {
 
                 DB_Album db_Albm = new DB_Album();
                 for (int i = 0; i < ArtA.length; i++) {
-                    aLA.add(db_Albm.buscarCanciones(ArtA[i]));
+                    aLA.add(db_Albm.buscarAlbumPorNombre(ArtA[i]));
                 }
                 Cancion.setAlbum(aLA);
                 Cancion.setPosicionAnterior(rs.getString("posicionAnterior"));
@@ -204,7 +204,7 @@ public class DB_Cancion {
 
                 ArrayList<Artista> aL = new ArrayList<Artista>();
 
-                DB_Interprete db_Interprete = new DB_Interprete();
+                DB_Artista db_Interprete = new DB_Artista();
                 for (int i = 0; i < ArtA.length; i++) {
 
                     aL.add(db_Interprete.buscarArtista(Integer.valueOf(ArtA[i])));
@@ -217,10 +217,10 @@ public class DB_Cancion {
 
                 DB_Album db_Albm = new DB_Album();
                 for (int i = 0; i < ArtA.length; i++) {
-                    if (db_Albm.buscarCanciones(ArtA[i]).getNombre().equals(a)) {
+                    if (db_Albm.buscarAlbumPorNombre(ArtA[i]).getNombre().equals(a)) {
                         apa = true;
                     }
-                    aLA.add(db_Albm.buscarCanciones(ArtA[i]));
+                    aLA.add(db_Albm.buscarAlbumPorNombre(ArtA[i]));
                 }
                 Cancion.setAlbum(aLA);
                 Cancion.setPosicionAnterior(rs.getString("posicionAnterior"));
@@ -266,7 +266,7 @@ public class DB_Cancion {
 
                 ArrayList<Artista> aL = new ArrayList<Artista>();
 
-                DB_Interprete db_Interprete = new DB_Interprete();
+                DB_Artista db_Interprete = new DB_Artista();
                 for (int i = 0; i < ArtA.length; i++) {
 
                     aL.add(db_Interprete.buscarArtista(Integer.valueOf(ArtA[i])));
@@ -280,7 +280,7 @@ public class DB_Cancion {
                 DB_Album db_Albm = new DB_Album();
                 for (int i = 0; i < ArtA.length; i++) {
 
-                    aLA.add(db_Albm.buscarCanciones(ArtA[i]));
+                    aLA.add(db_Albm.buscarAlbumPorNombre(ArtA[i]));
                 }
                 Cancion.setAlbum(aLA);
                 Cancion.setPosicionAnterior(rs.getString("posicionAnterior"));

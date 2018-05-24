@@ -7,6 +7,7 @@
 package Raiz.Dao;
 
 import Raiz.Album;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -24,6 +25,14 @@ public class DAO_Album {
     public boolean Insertar(Album a) {
 
         return DB.Insertar(a);
+    }
+    public ArrayList<Album> Listar() throws SQLException {
+
+        return DB.Listar();
+    }
+    public Album BuscarAlbumPorNombre(String a) throws SQLException {
+
+        return DB.buscarAlbumPorNombre(a);
     }
 
 }

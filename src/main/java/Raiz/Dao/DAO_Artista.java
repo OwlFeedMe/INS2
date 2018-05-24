@@ -8,6 +8,7 @@ package Raiz.Dao;
 
 import Raiz.Album;
 import Raiz.Artista;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -16,18 +17,23 @@ import java.util.ArrayList;
  */
 public class DAO_Artista {
 
-    private DB_Interprete DB;
+    private DB_Artista DB;
 
     public DAO_Artista() {
-        this.DB = new DB_Interprete();
+        this.DB = new DB_Artista();
     }
 
     public boolean Insertar(Artista a) {
         return DB.Insertar(a);
     }
-
-    public ArrayList<Artista> ListarInterprete() {
-        
-        return null;
+    public Artista BuscarArtista(int a) throws SQLException {
+        return DB.buscarArtista(a);
     }
+    public Artista BuscarArtistaNombre(String a) throws SQLException {
+        return DB.buscarArtistaNombre(a);
+    }
+    public ArrayList<Artista> ListarArtistas() throws SQLException {
+        return DB.ListasArtistas();
+    }
+
 }

@@ -237,7 +237,7 @@ public class DB_Venta {
             while (rs.next()) {
                 // iterate through the java resultset
 
-                arrayList.add(db_Album.buscarCanciones(rs.getString("NombreAlbum")));
+                arrayList.add(db_Album.buscarAlbumPorNombre(rs.getString("NombreAlbum")));
             }
             // print the results
             st.close();

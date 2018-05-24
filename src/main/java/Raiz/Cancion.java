@@ -49,13 +49,18 @@ public class Cancion {
     public void setArtista(ArrayList<Artista> Artista) {
         this.Artista = Artista;
     }
-
+    public void setArtistaA(Artista e) {
+        this.Artista.add(e);
+    }
     public ArrayList<Album> getAlbum() {
         return Album;
     }
 
     public void setAlbum(ArrayList<Album> Album) {
         this.Album = Album;
+    }
+    public void setAlbumA(Album e) {
+        this.Album.add(e);
     }
 
     public boolean Asignar_Artista_Cancion() {
