@@ -239,7 +239,11 @@ public class DB_Venta {
                 Album album = db_Album.buscarAlbumPorNombre(rs.getString("NombreAlbum"));
                 
                 album.setNVentas(buscarVentasAlbAntesDe(album.getNombre(), a));
-                
+                boolean ing = true;
+                for (int i = 0; i < arrayList.size(); i++) {
+                    if(arrayList.get(i).getNombre().equals(rs.getString("NombreAlbum")))
+                        ing=false;
+                }
                 arrayList.add(album);
             }
             // print the results
