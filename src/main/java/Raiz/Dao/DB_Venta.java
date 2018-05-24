@@ -244,6 +244,7 @@ public class DB_Venta {
                     if(arrayList.get(i).getNombre().equals(rs.getString("NombreAlbum")))
                         ing=false;
                 }
+                if(ing)
                 arrayList.add(album);
             }
             // print the results
