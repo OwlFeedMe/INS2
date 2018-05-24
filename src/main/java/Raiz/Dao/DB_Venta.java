@@ -35,13 +35,12 @@ public class DB_Venta {
 
     public void conectar() {
 
-        System.out.println("-------- MySQL JDBC Connection Testing ------------");
-
+//        System.out.println("-------- MySQL JDBC Connection Testing ------------");
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
 
         } catch (ClassNotFoundException e) {
-            System.out.println("Where is your MySQL JDBC Driver?");
+//            System.out.println("Where is your MySQL JDBC Driver?");
             e.printStackTrace();
             return;
         } catch (InstantiationException e) {
@@ -52,8 +51,7 @@ public class DB_Venta {
             e.printStackTrace();
         }
 
-        System.out.println("MySQL JDBC Driver Registered!");
-
+//        System.out.println("MySQL JDBC Driver Registered!");
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/musica", "root", "");
 
@@ -64,7 +62,7 @@ public class DB_Venta {
         }
 
         if (connection != null) {
-            System.out.println("You made it, take control your database now!");
+//            System.out.println("You made it, take control your database now!");
         } else {
             System.out.println("Failed to make connection!");
         }
@@ -86,7 +84,7 @@ public class DB_Venta {
 
             preparedStmt = connection.prepareStatement(query);
             preparedStmt.setLong(1, a.getFecha());
-            preparedStmt.setInt(2,BuscarId(a.getCancion().getNombre()));
+            preparedStmt.setInt(2, BuscarId(a.getCancion().getNombre()));
             if (a.getAlbum() != null) {
                 preparedStmt.setString(3, a.getAlbum().getNombre());
             } else {
@@ -199,17 +197,18 @@ public class DB_Venta {
 
     public ArrayList<Cancion> buscarCanciones(Long a) throws SQLException {
         ArrayList<Cancion> arrayList = new ArrayList<Cancion>();
-        ListaCancion listaCancion = new ListaCancion();
+
         try {
             // create the java statement
 
             Statement st = connection.createStatement();
 
             // execute the query, and get a java resultset
-            String query = "SELECT  * FROM  Ventas  where NombreAlbum = null and Fecha <" + a;
+            String query = "SELECT  * FROM  Ventas  where NombreAlbum is null and Fecha <" + a;
             ResultSet rs = st.executeQuery(query);
             DB_Cancion db_Cancion = new DB_Cancion();
             while (rs.next()) {
+
                 // iterate through the java resultset
                 arrayList.add(db_Cancion.buscarCancionPorId(rs.getInt("idCancion"), a));
 
@@ -223,7 +222,12 @@ public class DB_Venta {
             e.printStackTrace();
             return null;
         }
-
+        System.out.println(arrayList.size() + "TAMAÑOOO");
+        Collections.sort(arrayList);
+        System.out.println(arrayList.size());
+        for (int i = 0; i < arrayList.size(); i++) {
+            ActualizarNventasYPosC(arrayList.get(i), i + 1);
+        }
         return arrayList;
     }
 
@@ -274,31 +278,31 @@ public class DB_Venta {
 
     public int BuscarId(String a) {
 
-       int id=0;
+        int id = 0;
         try {
             // create the java statement
 
             Statement st = connection.createStatement();
 
             // execute the query, and get a java resultset
-            String query = "SELECT  * FROM  Cancion where nombre = '" + a+"'";
+            String query = "SELECT  * FROM  Cancion where nombre = '" + a + "'";
             ResultSet rs = st.executeQuery(query);
-            
+
             while (rs.next()) {
 
-                id= rs.getInt("id");
-                
+                id = rs.getInt("id");
+
             }
             // print the results
             st.close();
-            
+
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             System.out.println("Failed to make update!");
             e.printStackTrace();
             return 0;
         }
-        
+
         return id;
     }
 
@@ -339,5 +343,31 @@ public class DB_Venta {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    private boolean ActualizarNventasYPosC(Cancion get, int i) {
+        String query = " update Cancion set posicionAnterior = " + i + " , Aparicionesenlistas = " + (get.getAparicionesenlistas() + 1) + " where nombre = '" + get.getNombre() + "'";
+        System.out.println(query);
+
+        // create the mysql insert preparedstatement
+        PreparedStatement preparedStmt = null;
+
+        try {
+
+            preparedStmt = connection.prepareStatement(query);
+
+            // execute the preparedstatement
+            preparedStmt.execute();
+
+            System.out.println("You made it, the insertion is ok!");
+
+        } catch (SQLException ee) {
+            // TODO Auto-generated catch block
+            System.out.println("Failed to make insertion!");
+
+            ee.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

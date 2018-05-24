@@ -65,6 +65,8 @@ public class Controlador1 implements ActionListener, MouseListener {
 
     private String cabeza2[] = {"Posicion", "Cancion", "Artista/s", "Numero de ventas"};
     private String data2[][] = {};
+    private String cabeza3[] = {"Posicion","Cancion", "Artista/s", "Album/s", "Numero de ventas","Pocision Anterior", "Numero de veces en las listas"};
+    private String data3[][] = {};
 
     public Controlador1() {
 
@@ -91,10 +93,12 @@ public class Controlador1 implements ActionListener, MouseListener {
         
 //        Album
         this.Albumview.jComboBox1.addActionListener(this);
+        
         this.Albumview.jButton1.addActionListener(this);
         this.Albumview.jLabel7.addMouseListener(this);
         this.Albumview.jLabel5.addMouseListener(this);
         this.Albumview.jLabel12.addMouseListener(this);
+        
 
 //        Artista
         this.Artistaview.jButton1.addActionListener(this);
@@ -109,6 +113,7 @@ public class Controlador1 implements ActionListener, MouseListener {
 //        Listas
         this.ListaAlbumesview.jButton1.addActionListener(this);
         this.ListaAlbumesview.jLabel5.addMouseListener(this);
+         this.Lista.jButton1.addActionListener(this);
 
         this.Lista.jComboBox1.addActionListener(this);
         this.Lista.jLabel5.addMouseListener(this);
@@ -119,6 +124,7 @@ public class Controlador1 implements ActionListener, MouseListener {
     }
 
     @Override
+    @SuppressWarnings("empty-statement")
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == Cancionview.jButton1) {
@@ -204,8 +210,39 @@ public class Controlador1 implements ActionListener, MouseListener {
 //            }
 
         }
+        if (e.getSource() == listaCancion.jButton1) {
+            Date date = listaCancion.jDateChooser1.getDate();
+            try {
+                DefaultTableModel md = new DefaultTableModel(data3, cabeza3);
+                this.listaCancion.jTable1.setModel(md);
 
-        if (e.getSource() == Lista.jComboBox1) {
+                ArrayList<Cancion> Al = modeloVentas.ListarCanciones(date.getTime());
+                System.out.println(Al.get(0).getNombre());
+                for (int i = 0; i < Al.size(); i++) {
+                    String arts = " ";
+                    for (int j = 0; j < Al.get(i).getArtista().size(); j++) {
+                        arts += Al.get(i).getArtista().get(j).getNombreArtistico();
+                    }
+                   
+               
+                    String albss = " ";
+                    for (int j = 0; j < Al.get(i).getArtista().size(); j++) {
+                        albss += Al.get(i).getAlbum().get(j).getNombre();
+                    }
+                    
+                    String[] datos3 = {String.valueOf(i + 1), Al.get(i).getNombre(), arts, albss, String.valueOf(Al.get(i).getNVentas()),String.valueOf(Al.get(i).getPosicionAnterior()),String.valueOf(Al.get(i).getAparicionesenlistas())};
+                    md.addRow(datos3);
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(Controlador1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            JOptionPane.showMessageDialog(null, "Listado satisfactoriamente");
+
+        }
+        
+
+        if (e.getSource() == Lista.jButton1) {
             try {
                 if (Lista.jComboBox1.getSelectedItem() != null) {
                     llenarTabladeCancionesdeunAlbum(Lista.jComboBox1.getSelectedItem().toString());
@@ -230,8 +267,8 @@ public class Controlador1 implements ActionListener, MouseListener {
            
           
         }
-
     }
+    
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -390,7 +427,7 @@ public class Controlador1 implements ActionListener, MouseListener {
             String arts = " ";
             for (int j = 0; j < Al.get(i).getArtista().size(); j++) {
                 arts += Al.get(i).getArtista().get(j).getNombreArtistico();
-                System.out.println(Al.get(i).getArtista().get(j).getNombreArtistico());
+                System.out.println(Al.get(i).getArtista().get(j).getNombreArtistico()+"sssssssssssssssssssssss");
             }
             String[] datos = {String.valueOf(i + 1), Al.get(i).getNombre(), arts, String.valueOf(Al.get(i).getNVentas())};
             md.addRow(datos);

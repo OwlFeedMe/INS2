@@ -32,13 +32,13 @@ public class DB_Album {
     
     public void conectar() {
         
-        System.out.println("-------- MySQL JDBC Connection Testing ------------");
+//        System.out.println("-------- MySQL JDBC Connection Testing ------------");
         
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             
         } catch (ClassNotFoundException e) {
-            System.out.println("Where is your MySQL JDBC Driver?");
+//            System.out.println("Where is your MySQL JDBC Driver?");
             e.printStackTrace();
             return;
         } catch (InstantiationException e) {
@@ -61,7 +61,7 @@ public class DB_Album {
         }
         
         if (connection != null) {
-            System.out.println("You made it, take control your database now!");
+//            System.out.println("You made it, take control your database now!");
         } else {
             System.out.println("Failed to make connection!");
         }

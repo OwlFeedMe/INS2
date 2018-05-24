@@ -13,21 +13,20 @@ import java.util.ArrayList;
  *
  * @author user
  */
-public class Cancion {
+public class Cancion  implements Comparable<Object>{
 
     private String Nombre;
     private ArrayList<Artista> Artista ;
     private ArrayList<Album> Album;
-    private String posicionAnterior;
-    private String Aparicionesenlistas;
+    private int posicionAnterior;
+    private int Aparicionesenlistas;
     private int NVentas;
 
     public Cancion(String Nombre, String posicionAnterior, String Aparicionesenlistas, int Nventas) {
         this.Nombre = Nombre;
         this.Artista = new ArrayList<Artista>();
         this.Album = new ArrayList<Album>();
-        this.posicionAnterior = posicionAnterior;
-        this.Aparicionesenlistas = Aparicionesenlistas;
+      
         this.NVentas=Nventas;
     }
 
@@ -68,6 +67,22 @@ public class Cancion {
         return true;
     }
 
+    public int getPosicionAnterior() {
+        return posicionAnterior;
+    }
+
+    public void setPosicionAnterior(int posicionAnterior) {
+        this.posicionAnterior = posicionAnterior;
+    }
+
+    public int getAparicionesenlistas() {
+        return Aparicionesenlistas;
+    }
+
+    public void setAparicionesenlistas(int Aparicionesenlistas) {
+        this.Aparicionesenlistas = Aparicionesenlistas;
+    }
+
     public boolean Asignar_Album_Cancion() {
 
         return true;
@@ -81,21 +96,15 @@ public class Cancion {
         this.Nombre = Nombre;
     }
 
-    public String getPosicionAnterior() {
-        return posicionAnterior;
-    }
+  
 
-    public void setPosicionAnterior(String posicionAnterior) {
-        this.posicionAnterior = posicionAnterior;
-    }
+     @Override
+    public int compareTo(Object comparestu) {
+      int compareage=((Cancion)comparestu).getNVentas();
+        /* For Ascending order*/
+        return compareage-this.getNVentas();
 
-    public String getAparicionesenlistas() {
-        return Aparicionesenlistas;
-    }
-
-    public void setAparicionesenlistas(String Aparicionesenlistas) {
-        this.Aparicionesenlistas = Aparicionesenlistas;
-    }
+        /* For Descending order do like this */}
 
 
 
