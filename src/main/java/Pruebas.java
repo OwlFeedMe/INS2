@@ -23,11 +23,7 @@ public class Pruebas {
             
         Controlador1 controlador1 = new Controlador1();
         
-        Date date = new Date();
-        System.out.println(date);
-        String a = "885968706145";
-        date.setTime(Long.valueOf(a));
-        System.out.println(date);
+      
         
         
         
