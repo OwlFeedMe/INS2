@@ -23,9 +23,9 @@ public class Pruebas {
             
         Controlador1 controlador1 = new Controlador1();
         
-      
+        Date date = new Date();
         
-        
+        System.out.println(date.getTime()); 
         
       
     }

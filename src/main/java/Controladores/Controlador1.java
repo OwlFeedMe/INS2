@@ -36,6 +36,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -58,6 +59,14 @@ public class Controlador1 implements ActionListener, MouseListener{
 
     private ListarTodasLasCanciones listaCancion;
 
+    
+    private String cabeza[]={"Posicion","Album","Artista","Cantidad","Pocision Anterior","Numero de veces en las listas"};
+    private String data[][]={};
+    
+    private String cabeza2[]={"Posicion","Cancion","Artista/s","Numero de ventas"};
+    private String data2[][]={};
+    
+    
     public Controlador1() {
 
         this.Cancionview = new Canciones();
@@ -168,8 +177,14 @@ public class Controlador1 implements ActionListener, MouseListener{
         }
         
         if (e.getSource() == ListaAlbumesview.jButton1) {
-            JOptionPane.showMessageDialog(null, "Listado satisfactoriamente");
             Date date = ListaAlbumesview.jDateChooser2.getDate();
+            try {
+                llenarTabladeAlbum(date.getTime());
+            } catch (SQLException ex) {
+                Logger.getLogger(Controlador1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            JOptionPane.showMessageDialog(null, "Listado satisfactoriamente");
+            
             try {
                 modeloVentas.ListarAlbums(date.getTime());
             } catch (SQLException ex) {
@@ -177,6 +192,17 @@ public class Controlador1 implements ActionListener, MouseListener{
             }
             
         }
+        
+        if (e.getSource()==Lista.jComboBox1) {
+            try {if (Lista.jComboBox1.getSelectedItem()!=null) {
+                  llenarTabladeCancionesdeunAlbum(Lista.jComboBox1.getSelectedItem().toString());  
+                }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(Controlador1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
     }
 
     @Override
@@ -254,12 +280,15 @@ public class Controlador1 implements ActionListener, MouseListener{
         if (e.getSource() == Albumview.jLabel5) {
             Albumview.setVisible(false);
             ListaAlbumesview.setVisible(true);
-           
-          
-             
+
         }
         if (e.getSource() == Albumview.jLabel12) {
             Albumview.setVisible(false);
+            try {
+                RellenarCombo();
+            } catch (SQLException ex) {
+                Logger.getLogger(Controlador1.class.getName()).log(Level.SEVERE, null, ex);
+            }
             Lista.setVisible(true);
              
         }
@@ -297,11 +326,12 @@ public class Controlador1 implements ActionListener, MouseListener{
 
     public void RellenarCombo() throws SQLException {
         Albumview.jComboBox1.removeAllItems();
-
+        Lista.jComboBox1.removeAllItems();
         Cancionview.jComboBox1.removeAllItems();
         Cancionview.jComboBox2.removeAllItems();
         ArrayList<Artista> Artistas = modelArtista.ListarArtistas();
         ArrayList<Album> Album = modelAlbum.Listar();
+        
         for (int i = 0; i < Artistas.size(); i++) {
             Albumview.jComboBox1.addItem(Artistas.get(i).getNombreArtistico());
             Cancionview.jComboBox1.addItem(Artistas.get(i).getNombreArtistico());
@@ -309,9 +339,43 @@ public class Controlador1 implements ActionListener, MouseListener{
         }
         for (int i = 0; i < Album.size(); i++) {
             Cancionview.jComboBox2.addItem(Album.get(i).getNombre());
+            Lista.jComboBox1.addItem(Album.get(i).getNombre());
+            
         }
            
     }
 
-  
+    public void llenarTabladeAlbum(Long a) throws SQLException{
+    DefaultTableModel md=new DefaultTableModel(data,cabeza); 
+    this.ListaAlbumesview.jTable1.setModel(md);
+    
+        ArrayList<Album> Al = modeloVentas.ListarAlbums(a);   
+        System.out.println(Al.get(0).getNombre());
+        for (int i = 0; i < Al.size(); i++) {
+            String arts=" ";
+            for (int j = 0; j < Al.get(i).getInterprete().size(); j++) {
+                arts+=Al.get(i).getInterprete().get(j).getNombreArtistico();
+            }
+            String[] datos= {String.valueOf(i+1),Al.get(i).getNombre(),arts,String.valueOf(Al.get(i).getNVentas()),String.valueOf(Al.get(i).getPosAn()),String.valueOf(Al.get(i).getNV())}; 
+            md.addRow(datos);
+        }
+    
+    }       
+
+    public void llenarTabladeCancionesdeunAlbum(String a) throws SQLException  {
+        DefaultTableModel md = new DefaultTableModel(data2, cabeza2);
+        this.Lista.jTable1.setModel(md);
+
+        ArrayList<Cancion> Al = model.ListarPorAlbum(a);
+        for (int i = 0; i < Al.size(); i++) {
+            String arts=" ";
+            for (int j = 0; j < Al.get(i).getArtista().size(); j++) {
+                arts+=Al.get(i).getArtista().get(j).getNombreArtistico();
+            }
+            String[] datos = {String.valueOf(i + 1), Al.get(i).getNombre(), arts, String.valueOf(Al.get(i).getNVentas())};
+            md.addRow(datos);
+        }
+   
+    }
+
 }

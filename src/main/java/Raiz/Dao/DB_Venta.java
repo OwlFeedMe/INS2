@@ -172,7 +172,7 @@ public class DB_Venta {
             Statement st = connection.createStatement();
 
             // execute the query, and get a java resultset
-            String query = "SELECT  * FROM  Ventas  where NombreAlbum = " + a + " and Fecha < " + b;
+            String query = "SELECT  * FROM  Ventas  where NombreAlbum = '" + a + "' and Fecha < " + b + " and idCancion=0";
             ResultSet rs = st.executeQuery(query);
 
             while (rs.next()) {
@@ -236,8 +236,11 @@ public class DB_Venta {
             DB_Album db_Album = new DB_Album();
             while (rs.next()) {
                 // iterate through the java resultset
-
-                arrayList.add(db_Album.buscarAlbumPorNombre(rs.getString("NombreAlbum")));
+                Album album = db_Album.buscarAlbumPorNombre(rs.getString("NombreAlbum"));
+                
+                album.setNVentas(buscarVentasAlbAntesDe(album.getNombre(), a));
+                
+                arrayList.add(album);
             }
             // print the results
             st.close();
