@@ -93,8 +93,9 @@ public class Controlador1 implements ActionListener, MouseListener {
         
 //        Album
         this.Albumview.jComboBox1.addActionListener(this);
-        
+        this.Albumview.jComboBox3.addActionListener(this);
         this.Albumview.jButton1.addActionListener(this);
+        this.Albumview.jButton2.addActionListener(this);
         this.Albumview.jLabel7.addMouseListener(this);
         this.Albumview.jLabel5.addMouseListener(this);
         this.Albumview.jLabel12.addMouseListener(this);
@@ -158,6 +159,16 @@ public class Controlador1 implements ActionListener, MouseListener {
             Cancionview.jLabel15.setText((String) Cancionview.jComboBox2.getSelectedItem());
         }
        
+         if (e.getSource() == Albumview.jButton2) {
+        try {
+                Cancion cancion = new Cancion();
+               Album al = modelAlbum.BuscarAlbumPorNombre(Albumview.jTextField2.getText());
+                  modeloVentas.insertar(cancion, al,(int) Albumview.jSpinner1.getValue());
+            } catch (SQLException ex) {
+                Logger.getLogger(Controlador1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+           
+        }
 
         if (e.getSource() == Albumview.jButton1) {
             JOptionPane.showMessageDialog(null, "Guardado satisfactoriamente");
@@ -217,6 +228,7 @@ public class Controlador1 implements ActionListener, MouseListener {
                 this.listaCancion.jTable1.setModel(md);
 
                 ArrayList<Cancion> Al = modeloVentas.ListarCanciones(date.getTime());
+                
                 System.out.println(Al.get(0).getNombre());
                 for (int i = 0; i < Al.size(); i++) {
                     String arts = " ";
@@ -226,10 +238,15 @@ public class Controlador1 implements ActionListener, MouseListener {
                    
                
                     String albss = " ";
+                    System.out.println("Al.get(i).getAlbum().get(j).getNombre()");
                     for (int j = 0; j < Al.get(i).getArtista().size(); j++) {
                         albss += Al.get(i).getAlbum().get(j).getNombre();
+                        
+                    System.out.println(Al.get(i).getAlbum().get(j));
                     }
-                    
+                    if(albss.equals(" null")){
+                        albss="";
+                    }
                     String[] datos3 = {String.valueOf(i + 1), Al.get(i).getNombre(), arts, albss, String.valueOf(Al.get(i).getNVentas()),String.valueOf(Al.get(i).getPosicionAnterior()),String.valueOf(Al.get(i).getAparicionesenlistas())};
                     md.addRow(datos3);
                 }
@@ -256,6 +273,9 @@ public class Controlador1 implements ActionListener, MouseListener {
         
         if (e.getSource()==Cancionview.jComboBox5) {
             Cancionview.jTextField2.setText((String)Cancionview.jComboBox5.getSelectedItem());
+        }
+        if (e.getSource()==Albumview.jComboBox3) {
+            Albumview.jTextField2.setText((String)Albumview.jComboBox3.getSelectedItem());
         }
         if (e.getSource()==Cancionview.jButton2) {
             try {
@@ -393,6 +413,7 @@ public class Controlador1 implements ActionListener, MouseListener {
 
     public void RellenarCombo() throws SQLException {
         Albumview.jComboBox1.removeAllItems();
+        Albumview.jComboBox3.removeAllItems();
         Lista.jComboBox1.removeAllItems();
         Cancionview.jComboBox1.removeAllItems();
         Cancionview.jComboBox2.removeAllItems();
@@ -402,11 +423,13 @@ public class Controlador1 implements ActionListener, MouseListener {
         ArrayList<Cancion> cancion=model.ListarCancion();
         for (int i = 0; i < Artistas.size(); i++) {
             Albumview.jComboBox1.addItem(Artistas.get(i).getNombreArtistico());
+            
             Cancionview.jComboBox1.addItem(Artistas.get(i).getNombreArtistico());
 
         }
         for (int i = 0; i < Album.size(); i++) {
             Cancionview.jComboBox2.addItem(Album.get(i).getNombre());
+             Albumview.jComboBox3.addItem(Album.get(i).getNombre());
             Lista.jComboBox1.addItem(Album.get(i).getNombre());
 
         }

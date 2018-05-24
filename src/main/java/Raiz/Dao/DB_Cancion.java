@@ -353,9 +353,10 @@ public Cancion buscarCancionPorId(int a, long b) throws SQLException {
                 ArrayList<Album> aLA = new ArrayList<Album>();
                 
                 DB_Album db_Albm = new DB_Album();
-                for (int i = 0; i < ArtA.length; i++) {
-                    
-                    aLA.add(db_Albm.buscarAlbumPorNombre(ArtA[i]));
+      
+                for (int i = 0; i < AlmbA.length; i++) {
+                   
+                    aLA.add(db_Albm.buscarAlbumPorNombre(AlmbA[i]));
                 }
                 Cancion.setAlbum(aLA);
                 Cancion.setPosicionAnterior(rs.getInt("posicionAnterior"));

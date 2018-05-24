@@ -112,7 +112,7 @@ public class DB_Album {
     
     public Album buscarAlbumPorNombre(String a) throws SQLException {
         
-        Album album = new Album();
+       Album album = new Album();
         try {
             // create the java statement
 
@@ -122,7 +122,9 @@ public class DB_Album {
             String query = "SELECT  * FROM Album  where nombre = " + "'"+a+"'";
             ResultSet rs = st.executeQuery(query);
             
-            while (rs.next()) {
+            while (rs.next()) { 
+                
+                System.out.println(a);
                 // iterate through the java resultset
                 album.setNombre(a);
                 
@@ -151,7 +153,7 @@ public class DB_Album {
             e.printStackTrace();
             return null;
         }
-        
+        System.out.println(album);
         return album;
     }
     

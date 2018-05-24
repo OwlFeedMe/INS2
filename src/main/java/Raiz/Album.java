@@ -26,7 +26,6 @@ public class Album  implements Comparable {
         this.PosAn = PosAn;
         this.PosAc = PosAc;
         this.NVentas=0;
-      
         this.Interprete= new ArrayList();
     }
 
@@ -90,6 +89,11 @@ public class Album  implements Comparable {
     public boolean Asignar_Interprete_Album() {
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Album{" + "Nombre=" + Nombre + ", Interprete=" + Interprete + ", PosAn=" + PosAn + ", PosAc=" + PosAc + ", NV=" + NV + ", NVentas=" + NVentas + '}';
     }
 
     @Override
