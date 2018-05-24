@@ -13,6 +13,7 @@ import Raiz.Dao.DAO_Album;
 import Raiz.Dao.DAO_Artista;
 import Raiz.Dao.DAO_Cancion;
 import Raiz.Dao.DAO_Ventas;
+import Raiz.Ventas;
 import is2.Albumes;
 import is2.Artistas;
 import is2.Canciones;
@@ -42,7 +43,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author user
  */
-public class Controlador1 implements ActionListener, MouseListener{
+public class Controlador1 implements ActionListener, MouseListener {
 
     private Canciones Cancionview;
     private DAO_Cancion model;
@@ -59,14 +60,12 @@ public class Controlador1 implements ActionListener, MouseListener{
 
     private ListarTodasLasCanciones listaCancion;
 
-    
-    private String cabeza[]={"Posicion","Album","Artista","Cantidad","Pocision Anterior","Numero de veces en las listas"};
-    private String data[][]={};
-    
-    private String cabeza2[]={"Posicion","Cancion","Artista/s","Numero de ventas"};
-    private String data2[][]={};
-    
-    
+    private String cabeza[] = {"Posicion", "Album", "Artista", "Cantidad", "Pocision Anterior", "Numero de veces en las listas"};
+    private String data[][] = {};
+
+    private String cabeza2[] = {"Posicion", "Cancion", "Artista/s", "Numero de ventas"};
+    private String data2[][] = {};
+
     public Controlador1() {
 
         this.Cancionview = new Canciones();
@@ -87,7 +86,9 @@ public class Controlador1 implements ActionListener, MouseListener{
         this.Cancionview.jComboBox2.addActionListener(this);
         this.Cancionview.jLabel7.addMouseListener(this);
         this.Cancionview.jLabel5.addMouseListener(this);
-
+        this.Cancionview.jComboBox5.addActionListener(this);
+        this.Cancionview.jButton2.addActionListener(this);
+        
 //        Album
         this.Albumview.jComboBox1.addActionListener(this);
         this.Albumview.jButton1.addActionListener(this);
@@ -107,17 +108,14 @@ public class Controlador1 implements ActionListener, MouseListener{
 
 //        Listas
         this.ListaAlbumesview.jButton1.addActionListener(this);
-        this.ListaAlbumesview.jLabel5.addMouseListener(this); 
-        
-        
+        this.ListaAlbumesview.jLabel5.addMouseListener(this);
+
         this.Lista.jComboBox1.addActionListener(this);
         this.Lista.jLabel5.addMouseListener(this);
-        
+
         this.listaCancion.jButton1.addActionListener(this);
         this.listaCancion.jLabel5.addMouseListener(this);
 
-        
-        
     }
 
     @Override
@@ -153,6 +151,7 @@ public class Controlador1 implements ActionListener, MouseListener{
         if (e.getSource() == Cancionview.jComboBox2) {
             Cancionview.jLabel15.setText((String) Cancionview.jComboBox2.getSelectedItem());
         }
+       
 
         if (e.getSource() == Albumview.jButton1) {
             JOptionPane.showMessageDialog(null, "Guardado satisfactoriamente");
@@ -175,42 +174,73 @@ public class Controlador1 implements ActionListener, MouseListener{
             Artista artista = new Artista(0, Artistaview.jTextField1.getText(), Artistaview.jTextField2.getText());
             modelArtista.Insertar(artista);
         }
-        
+
         if (e.getSource() == ListaAlbumesview.jButton1) {
             Date date = ListaAlbumesview.jDateChooser2.getDate();
             try {
-                llenarTabladeAlbum(date.getTime());
+                DefaultTableModel md = new DefaultTableModel(data, cabeza);
+                this.ListaAlbumesview.jTable1.setModel(md);
+
+                ArrayList<Album> Al = modeloVentas.ListarAlbums(date.getTime());
+                System.out.println(Al.get(0).getNombre());
+                for (int i = 0; i < Al.size(); i++) {
+                    String arts = " ";
+                    for (int j = 0; j < Al.get(i).getInterprete().size(); j++) {
+                        arts += Al.get(i).getInterprete().get(j).getNombreArtistico();
+                    }
+                    String[] datos = {String.valueOf(i + 1), Al.get(i).getNombre(), arts, String.valueOf(Al.get(i).getNVentas()), String.valueOf(Al.get(i).getPosAn()), String.valueOf(Al.get(i).getNV())};
+                    md.addRow(datos);
+                }
+
             } catch (SQLException ex) {
                 Logger.getLogger(Controlador1.class.getName()).log(Level.SEVERE, null, ex);
             }
             JOptionPane.showMessageDialog(null, "Listado satisfactoriamente");
-            
+
+//            try {
+////                modeloVentas.ListarAlbums(date.getTime());
+//            } catch (SQLException ex) {
+//                Logger.getLogger(Controlador1.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+
+        }
+
+        if (e.getSource() == Lista.jComboBox1) {
             try {
-                modeloVentas.ListarAlbums(date.getTime());
-            } catch (SQLException ex) {
-                Logger.getLogger(Controlador1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-        }
-        
-        if (e.getSource()==Lista.jComboBox1) {
-            try {if (Lista.jComboBox1.getSelectedItem()!=null) {
-                  llenarTabladeCancionesdeunAlbum(Lista.jComboBox1.getSelectedItem().toString());  
+                if (Lista.jComboBox1.getSelectedItem() != null) {
+                    llenarTabladeCancionesdeunAlbum(Lista.jComboBox1.getSelectedItem().toString());
                 }
-                
+
             } catch (SQLException ex) {
                 Logger.getLogger(Controlador1.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
+        
+        if (e.getSource()==Cancionview.jComboBox5) {
+            Cancionview.jTextField2.setText((String)Cancionview.jComboBox5.getSelectedItem());
+        }
+        if (e.getSource()==Cancionview.jButton2) {
+            try {
+                Cancion cancion = model.BuscarPorNombre(Cancionview.jTextField2.getText());
+                  modeloVentas.insertar(cancion, null,(int) Cancionview.jSpinner1.getValue());
+            } catch (SQLException ex) {
+                Logger.getLogger(Controlador1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+           
+          
+        }
+
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) { System.out.println(e);
+    public void mouseClicked(MouseEvent e) {
+        System.out.println(e);
     }
 
     @Override
-    public void mousePressed(MouseEvent e) { System.out.println(e);
+    public void mousePressed(MouseEvent e) {
+        System.out.println(e);
     }
 
     @Override
@@ -224,12 +254,11 @@ public class Controlador1 implements ActionListener, MouseListener{
                 Logger.getLogger(Controlador1.class.getName()).log(Level.SEVERE, null, ex);
             }
             Cancionview.jLabel14.setText("");
-            Cancionview.artistas="";
+            Cancionview.artistas = "";
             Cancionview.jLabel15.setText("");
-            Cancionview.albumes="";
+            Cancionview.albumes = "";
             principal.setVisible(false);
             Cancionview.setVisible(true);
-             
 
         }
         if (e.getSource() == principal.jPanel5) {
@@ -243,39 +272,38 @@ public class Controlador1 implements ActionListener, MouseListener{
             Albumview.artistas = "";
             principal.setVisible(false);
             Albumview.setVisible(true);
-             
 
         }
         if (e.getSource() == principal.jPanel9) {
             principal.setVisible(false);
             Artistaview.setVisible(true);
-             
+
         }
 
         // Canciones
         if (e.getSource() == Cancionview.jLabel7) {
             Cancionview.setVisible(false);
             principal.setVisible(true);
-             
+
         }
         if (e.getSource() == Cancionview.jLabel5) {
             Cancionview.setVisible(false);
             listaCancion.setVisible(true);
-             
+
         }
 
         // Lista Canciones
         if (e.getSource() == listaCancion.jLabel5) {
             listaCancion.setVisible(false);
             Cancionview.setVisible(true);
-             
+
         }
 
         // Album
         if (e.getSource() == Albumview.jLabel7) {
             Albumview.setVisible(false);
             principal.setVisible(true);
-             
+
         }
         if (e.getSource() == Albumview.jLabel5) {
             Albumview.setVisible(false);
@@ -290,28 +318,30 @@ public class Controlador1 implements ActionListener, MouseListener{
                 Logger.getLogger(Controlador1.class.getName()).log(Level.SEVERE, null, ex);
             }
             Lista.setVisible(true);
-             
+        }
+        if(e.getSource() == Albumview.jLabel18){
+            
         }
 
         //Lista
         if (e.getSource() == Lista.jLabel5) {
             Lista.setVisible(false);
             Albumview.setVisible(true);
-             
+
         }
 
         //Lista Completa
         if (e.getSource() == ListaAlbumesview.jLabel5) {
             ListaAlbumesview.setVisible(false);
             Albumview.setVisible(true);
-             
+
         }
 
         //Artista
         if (e.getSource() == Artistaview.jLabel7) {
             Artistaview.setVisible(false);
             principal.setVisible(true);
-             
+
         }
 
     }
@@ -329,53 +359,43 @@ public class Controlador1 implements ActionListener, MouseListener{
         Lista.jComboBox1.removeAllItems();
         Cancionview.jComboBox1.removeAllItems();
         Cancionview.jComboBox2.removeAllItems();
+        Cancionview.jComboBox5.removeAllItems();
         ArrayList<Artista> Artistas = modelArtista.ListarArtistas();
         ArrayList<Album> Album = modelAlbum.Listar();
-        
+        ArrayList<Cancion> cancion=model.ListarCancion();
         for (int i = 0; i < Artistas.size(); i++) {
             Albumview.jComboBox1.addItem(Artistas.get(i).getNombreArtistico());
             Cancionview.jComboBox1.addItem(Artistas.get(i).getNombreArtistico());
-   
+
         }
         for (int i = 0; i < Album.size(); i++) {
             Cancionview.jComboBox2.addItem(Album.get(i).getNombre());
             Lista.jComboBox1.addItem(Album.get(i).getNombre());
-            
+
         }
-           
+        for (int i = 0; i < cancion.size(); i++) {
+            Cancionview.jComboBox5.addItem(cancion.get(i).getNombre());
+            System.out.println(cancion.get(i).getNombre());
+        }
+
     }
 
-    public void llenarTabladeAlbum(Long a) throws SQLException{
-    DefaultTableModel md=new DefaultTableModel(data,cabeza); 
-    this.ListaAlbumesview.jTable1.setModel(md);
-    
-        ArrayList<Album> Al = modeloVentas.ListarAlbums(a);   
-        System.out.println(Al.get(0).getNombre());
-        for (int i = 0; i < Al.size(); i++) {
-            String arts=" ";
-            for (int j = 0; j < Al.get(i).getInterprete().size(); j++) {
-                arts+=Al.get(i).getInterprete().get(j).getNombreArtistico();
-            }
-            String[] datos= {String.valueOf(i+1),Al.get(i).getNombre(),arts,String.valueOf(Al.get(i).getNVentas()),String.valueOf(Al.get(i).getPosAn()),String.valueOf(Al.get(i).getNV())}; 
-            md.addRow(datos);
-        }
-    
-    }       
-
-    public void llenarTabladeCancionesdeunAlbum(String a) throws SQLException  {
+    public void llenarTabladeCancionesdeunAlbum(String a) throws SQLException {
         DefaultTableModel md = new DefaultTableModel(data2, cabeza2);
         this.Lista.jTable1.setModel(md);
 
         ArrayList<Cancion> Al = model.ListarPorAlbum(a);
+       
         for (int i = 0; i < Al.size(); i++) {
-            String arts=" ";
+            String arts = " ";
             for (int j = 0; j < Al.get(i).getArtista().size(); j++) {
-                arts+=Al.get(i).getArtista().get(j).getNombreArtistico();
+                arts += Al.get(i).getArtista().get(j).getNombreArtistico();
+                System.out.println(Al.get(i).getArtista().get(j).getNombreArtistico());
             }
             String[] datos = {String.valueOf(i + 1), Al.get(i).getNombre(), arts, String.valueOf(Al.get(i).getNVentas())};
             md.addRow(datos);
         }
-   
+
     }
 
 }

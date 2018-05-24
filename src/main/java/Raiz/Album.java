@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author user
  */
-public class Album {
+public class Album  implements Comparable {
 
     private String Nombre;
     private ArrayList<Artista> Interprete;
@@ -48,6 +48,7 @@ public class Album {
     public void setInterprete(Artista e) {
         this.Interprete.add(e);
     }
+    
 
     public void setInterpreteS(ArrayList<Artista> e) {
         this.Interprete = e;
@@ -90,4 +91,12 @@ public class Album {
 
         return true;
     }
+
+    @Override
+    public int compareTo(Object comparestu) {
+      int compareage=((Album)comparestu).getNVentas();
+        /* For Ascending order*/
+        return compareage-this.getNVentas();
+
+        /* For Descending order do like this */}
 }

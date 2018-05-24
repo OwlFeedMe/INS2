@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  *
@@ -70,7 +71,7 @@ public class DB_Venta {
 
     }
 
-    public boolean Insertar(Ventas a, int id) {
+    public boolean Insertar(Ventas a, int cantidad) {
 //        Insertion 
 //	 create a sql date object so we can use it in our INSERT statement
 
@@ -85,8 +86,12 @@ public class DB_Venta {
 
             preparedStmt = connection.prepareStatement(query);
             preparedStmt.setLong(1, a.getFecha());
-            preparedStmt.setInt(2, id);
-            preparedStmt.setString(3, a.getAlbum().getNombre());
+            preparedStmt.setInt(2,BuscarId(a.getCancion().getNombre()));
+            if (a.getAlbum() != null) {
+                preparedStmt.setString(3, a.getAlbum().getNombre());
+            } else {
+                preparedStmt.setString(3, null);
+            }
             preparedStmt.setInt(4, a.getCantidas());
 
             // execute the preparedstatement
@@ -237,15 +242,18 @@ public class DB_Venta {
             while (rs.next()) {
                 // iterate through the java resultset
                 Album album = db_Album.buscarAlbumPorNombre(rs.getString("NombreAlbum"));
-                
+
                 album.setNVentas(buscarVentasAlbAntesDe(album.getNombre(), a));
                 boolean ing = true;
                 for (int i = 0; i < arrayList.size(); i++) {
-                    if(arrayList.get(i).getNombre().equals(rs.getString("NombreAlbum")))
-                        ing=false;
+                    if (arrayList.get(i).getNombre().equals(rs.getString("NombreAlbum"))) {
+                        ing = false;
+                    }
                 }
-                if(ing)
-                arrayList.add(album);
+                if (ing) {
+
+                    arrayList.add(album);
+                }
             }
             // print the results
             st.close();
@@ -256,8 +264,72 @@ public class DB_Venta {
             e.printStackTrace();
             return null;
         }
-
+        Collections.sort(arrayList);
+        System.out.println(arrayList.size());
+        for (int i = 0; i < arrayList.size(); i++) {
+            ActualizarNventasYPos(arrayList.get(i), i + 1);
+        }
         return arrayList;
+    }
+
+    public int BuscarId(String a) {
+
+       int id=0;
+        try {
+            // create the java statement
+
+            Statement st = connection.createStatement();
+
+            // execute the query, and get a java resultset
+            String query = "SELECT  * FROM  Cancion where nombre = '" + a+"'";
+            ResultSet rs = st.executeQuery(query);
+            
+            while (rs.next()) {
+
+                id= rs.getInt("id");
+                
+            }
+            // print the results
+            st.close();
+            
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            System.out.println("Failed to make update!");
+            e.printStackTrace();
+            return 0;
+        }
+        
+        return id;
+    }
+
+    public boolean ActualizarNventasYPos(Album a, int v) {
+//        Insertion 
+//	 create a sql date object so we can use it in our INSERT statement
+
+        // the mysql insert statement
+        String query = " update Album set posicionAnterior = " + v + " , Aparicionesenlistas = " + (a.getNV() + 1) + " where nombre = '" + a.getNombre() + "'";
+        System.out.println(query);
+
+        // create the mysql insert preparedstatement
+        PreparedStatement preparedStmt = null;
+
+        try {
+
+            preparedStmt = connection.prepareStatement(query);
+
+            // execute the preparedstatement
+            preparedStmt.execute();
+
+            System.out.println("You made it, the insertion is ok!");
+
+        } catch (SQLException ee) {
+            // TODO Auto-generated catch block
+            System.out.println("Failed to make insertion!");
+
+            ee.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public void desconectar() {

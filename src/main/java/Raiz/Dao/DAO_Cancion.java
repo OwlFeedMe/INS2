@@ -37,4 +37,10 @@ public class DAO_Cancion {
     public ArrayList<Cancion> ListarPorAlbum(String a) throws SQLException {
         return DB.buscarCancionesPorAlbum(a);
     }
+    public Cancion BuscarPorNombre(String a) throws SQLException {
+        return DB.buscarCancionPorNombre(a);
+    }
+    public ArrayList<Cancion> ListarCancion() throws SQLException {
+        return DB.buscarCanciones();
+    }
 }

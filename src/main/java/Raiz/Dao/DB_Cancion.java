@@ -26,6 +26,7 @@ public class DB_Cancion {
     
     public Connection connection;
     
+    
     public DB_Cancion() {
         conectar();
     }
@@ -183,6 +184,66 @@ public class DB_Cancion {
         return arrayList;
     }
     
+    public ArrayList<Cancion> buscarCanciones() throws SQLException {
+        ArrayList<Cancion> arrayList = new ArrayList<Cancion>();
+        
+        try {
+            // create the java statement
+
+            Statement st = connection.createStatement();
+
+            // execute the query, and get a java resultset
+            String query = "SELECT  * FROM  Cancion";
+            ResultSet rs = st.executeQuery(query);
+            
+            while (rs.next()) {
+                Cancion Cancion = new Cancion();
+                boolean apa = false;
+                // iterate through the java resultset
+                Cancion.setNombre(rs.getString("nombre"));
+                String Art = rs.getString("idArtista");
+                String[] ArtA = Art.split(",");
+                
+                ArrayList<Artista> aL = new ArrayList<Artista>();
+                
+                DB_Artista db_Interprete = new DB_Artista();
+                for (int i = 0; i < ArtA.length; i++) {
+                   
+                    aL.add(db_Interprete.buscarArtista(Integer.valueOf(ArtA[i])));
+                }
+                Cancion.setArtista(aL);
+                
+                String Almb = rs.getString("NombreAlbum");
+                String[] AlmbA = Almb.split(",");
+                ArrayList<Album> aLA = new ArrayList<Album>();
+                
+                DB_Album db_Albm = new DB_Album();
+                for (int i = 0; i < ArtA.length; i++) {
+                    aLA.add(db_Albm.buscarAlbumPorNombre(ArtA[i]));
+                }
+                Cancion.setAlbum(aLA);
+                Cancion.setPosicionAnterior(rs.getString("posicionAnterior"));
+                Cancion.setAparicionesenlistas(rs.getString("Aparicionesenlistas"));
+                DB_Venta db_Venta = new DB_Venta();
+                Cancion.setNVentas(db_Venta.buscarVentasCan(rs.getInt("id")));
+                
+               
+                    arrayList.add(Cancion);
+                
+            }
+            // print the results
+            st.close();
+            
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            System.out.println("Failed to make update!");
+            e.printStackTrace();
+            return null;
+        }
+        
+        return arrayList;
+    }
+    
     public ArrayList<Cancion> buscarCancionesPorAlbum(String a) throws SQLException {
         ArrayList<Cancion> arrayList = new ArrayList<Cancion>();
         Cancion Cancion = new Cancion();
@@ -291,6 +352,63 @@ public class DB_Cancion {
                 Cancion.setAparicionesenlistas(rs.getString("Aparicionesenlistas"));
                 DB_Venta db_Venta = new DB_Venta();
                 Cancion.setNVentas(db_Venta.buscarVentasCanAntesDe(a, b));
+                
+            }
+            // print the results
+            st.close();
+            
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            System.out.println("Failed to make update!");
+            e.printStackTrace();
+            return null;
+        }
+        
+        return Cancion;
+    }
+    
+    public Cancion buscarCancionPorNombre(String a) throws SQLException {
+        
+        Cancion Cancion = new Cancion();
+        try {
+            // create the java statement
+
+            Statement st = connection.createStatement();
+
+            // execute the query, and get a java resultset
+            String query = "SELECT  * FROM  Cancion where nombre = '" + a+"'";
+            ResultSet rs = st.executeQuery(query);
+            
+            while (rs.next()) {
+
+                // iterate through the java resultset
+                Cancion.setNombre(rs.getString("nombre"));
+                String Art = rs.getString("idArtista");
+                String[] ArtA = Art.split(",");
+                
+                ArrayList<Artista> aL = new ArrayList<Artista>();
+                
+                DB_Artista db_Interprete = new DB_Artista();
+                for (int i = 0; i < ArtA.length; i++) {
+                    
+                    aL.add(db_Interprete.buscarArtista(Integer.valueOf(ArtA[i])));
+                }
+                Cancion.setArtista(aL);
+                
+                String Almb = rs.getString("NombreAlbum");
+                String[] AlmbA = Almb.split(",");
+                ArrayList<Album> aLA = new ArrayList<Album>();
+                
+                DB_Album db_Albm = new DB_Album();
+                for (int i = 0; i < ArtA.length; i++) {
+                    
+                    aLA.add(db_Albm.buscarAlbumPorNombre(ArtA[i]));
+                }
+                Cancion.setAlbum(aLA);
+                Cancion.setPosicionAnterior(rs.getString("posicionAnterior"));
+                Cancion.setAparicionesenlistas(rs.getString("Aparicionesenlistas"));
+                DB_Venta db_Venta = new DB_Venta();
+            
                 
             }
             // print the results
